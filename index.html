@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telegram Bot API Playground</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #0088cc, #0066aa);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        position: relative;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)" opacity="0.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)" opacity="0.3"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/></circle><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)" opacity="0.4"><animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.5s" repeatCount="indefinite"/></circle></svg>')
+          no-repeat center;
+        background-size: cover;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        min-height: 600px;
+      }
+
+      .left-panel,
+      .right-panel {
+        padding: 30px;
+      }
+
+      .left-panel {
+        border-right: 1px solid #e0e0e0;
+        background: #fafafa;
+      }
+
+      .bot-token-section {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border: 2px solid #e3f2fd;
+      }
+
+      .bot-token-section h3 {
+        color: #1976d2;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .method-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        background: white;
+        border-radius: 12px;
+        padding: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab-button {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #666;
+      }
+
+      .tab-button.active {
+        background: linear-gradient(135deg, #0088cc, #0066aa);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 136, 204, 0.3);
+      }
+
+      .method-form {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e0e0e0;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9rem;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #fafafa;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #0088cc;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(0, 136, 204, 0.1);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-group small {
+        color: #666;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+      }
+
+      .send-button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      }
+
+      .send-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+      }
+
+      .send-button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .right-panel h3 {
+        color: #333;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .response-container {
+        background: #1e1e1e;
+        border-radius: 12px;
+        padding: 20px;
+        min-height: 400px;
+        font-family: "Courier New", monospace;
+        color: #f8f8f2;
+        overflow-x: auto;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      .response-container pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #0088cc;
+        font-style: italic;
+      }
+
+      .loading::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e0e0e0;
+        border-top: 2px solid #0088cc;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .success {
+        color: #4caf50;
+      }
+
+      .error {
+        color: #f44336;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .file-input-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-input-label {
+        display: block;
+        padding: 12px 15px;
+        background: #f0f8ff;
+        border: 2px dashed #0088cc;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #0088cc;
+        font-weight: 500;
+      }
+
+      .file-input-label:hover {
+        background: #e3f2fd;
+        border-color: #0066aa;
+      }
+
+      .file-input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+
+        .left-panel {
+          border-right: none;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🤖 Telegram Bot API Playground</h1>
+        <p>Test sendMessage dan sendPhoto methods dengan mudah</p>
+      </div>
+
+      <div class="main-content">
+        <div class="left-panel">
+          <div class="bot-token-section">
+            <h3>🔑 Bot Configuration</h3>
+            <div class="form-group">
+              <label for="botToken">Bot Token:</label>
+              <input
+                type="password"
+                id="botToken"
+                placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+              />
+              <small>Masukkan token bot Telegram Anda dari @BotFather</small>
+            </div>
+          </div>
+
+          <div class="method-tabs">
+            <button
+              class="tab-button active"
+              onclick="showMethod('sendMessage')"
+            >
+              📝 sendMessage
+            </button>
+            <button class="tab-button" onclick="showMethod('sendPhoto')">
+              📸 sendPhoto
+            </button>
+          </div>
+
+          <form id="sendMessageForm" class="method-form">
+            <h3>📝 Send Message</h3>
+
+            <div class="form-group">
+              <label for="chatId">Chat ID: *</label>
+              <input
+                type="text"
+                id="chatId"
+                required
+                placeholder="@username atau chat_id"
+              />
+              <small>ID chat atau username channel/grup</small>
+            </div>
+
+            <div class="form-group">
+              <label for="messageText">Text: *</label>
+              <textarea
+                id="messageText"
+                required
+                placeholder="Halo! Ini pesan dari bot."
+              ></textarea>
+              <small>Teks pesan yang akan dikirim (mendukung Markdown)</small>
+            </div>
+
+            <div class="form-group">
+              <label for="parseMode">Parse Mode:</label>
+              <select id="parseMode">
+                <option value="">None</option>
+                <option value="Markdown">Markdown</option>
+                <option value="MarkdownV2">MarkdownV2</option>
+                <option value="HTML">HTML</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="disableWebPagePreview">
+                <input type="checkbox" id="disableWebPagePreview" /> Disable Web
+                Page Preview
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="disableNotification">
+                <input type="checkbox" id="disableNotification" /> Disable
+                Notification
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="replyToMessageId">Reply to Message ID:</label>
+              <input type="number" id="replyToMessageId" placeholder="123456" />
+              <small>ID pesan yang akan di-reply</small>
+            </div>
+
+            <button type="submit" class="send-button">🚀 Send Message</button>
+          </form>
+
+          <form id="sendPhotoForm" class="method-form hidden">
+            <h3>📸 Send Photo</h3>
+
+            <div class="form-group">
+              <label for="photoChatId">Chat ID: *</label>
+              <input
+                type="text"
+                id="photoChatId"
+                required
+                placeholder="@username atau chat_id"
+              />
+              <small>ID chat atau username channel/grup</small>
+            </div>
+
+            <div class="form-group">
+              <label for="photoInput">Photo: *</label>
+              <div class="file-input-container">
+                <label for="photoFile" class="file-input-label">
+                  📁 Pilih File Gambar atau masukkan URL
+                </label>
+                <input
+                  type="file"
+                  id="photoFile"
+                  class="file-input"
+                  accept="image/*"
+                />
+              </div>
+              <input
+                type="url"
+                id="photoUrl"
+                placeholder="https://example.com/photo.jpg"
+                style="margin-top: 10px"
+              />
+              <small>Upload file gambar atau masukkan URL gambar</small>
+            </div>
+
+            <div class="form-group">
+              <label for="photoCaption">Caption:</label>
+              <textarea
+                id="photoCaption"
+                placeholder="Caption untuk foto..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="photoParseMode">Parse Mode:</label>
+              <select id="photoParseMode">
+                <option value="">None</option>
+                <option value="Markdown">Markdown</option>
+                <option value="MarkdownV2">MarkdownV2</option>
+                <option value="HTML">HTML</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="photoDisableNotification">
+                <input type="checkbox" id="photoDisableNotification" /> Disable
+                Notification
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="photoReplyToMessageId">Reply to Message ID:</label>
+              <input
+                type="number"
+                id="photoReplyToMessageId"
+                placeholder="123456"
+              />
+            </div>
+
+            <button type="submit" class="send-button">📤 Send Photo</button>
+          </form>
+        </div>
+
+        <div class="right-panel">
+          <h3>📊 Response</h3>
+          <div class="response-container" id="responseContainer">
+            <pre id="responseContent">
+Belum ada response. Kirim pesan untuk melihat hasilnya...</pre
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentMethod = "sendMessage";
+
+      function showMethod(method) {
+        currentMethod = method;
+
+        // Update tab buttons
+        document.querySelectorAll(".tab-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // Show/hide forms
+        document
+          .getElementById("sendMessageForm")
+          .classList.toggle("hidden", method !== "sendMessage");
+        document
+          .getElementById("sendPhotoForm")
+          .classList.toggle("hidden", method !== "sendPhoto");
+      }
+
+      function displayResponse(data, isError = false) {
+        const container = document.getElementById("responseContent");
+        const timestamp = new Date().toLocaleString("id-ID");
+
+        if (isError) {
+          container.innerHTML = `<span class="error">❌ Error [${timestamp}]</span>\n\n${JSON.stringify(
+            data,
+            null,
+            2
+          )}`;
+        } else {
+          container.innerHTML = `<span class="success">✅ Success [${timestamp}]</span>\n\n${JSON.stringify(
+            data,
+            null,
+            2
+          )}`;
+        }
+      }
+
+      function showLoading() {
+        const container = document.getElementById("responseContent");
+        container.innerHTML =
+          '<span class="loading">Mengirim request...</span>';
+      }
+
+      async function sendMessage(formData) {
+        const botToken = document.getElementById("botToken").value.trim();
+
+        if (!botToken) {
+          displayResponse({ error: "Bot token harus diisi!" }, true);
+          return;
+        }
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        const payload = {
+          chat_id: formData.get("chat_id"),
+          text: formData.get("text"),
+        };
+
+        // Add optional parameters
+        if (formData.get("parse_mode"))
+          payload.parse_mode = formData.get("parse_mode");
+        if (formData.get("disable_web_page_preview"))
+          payload.disable_web_page_preview = true;
+        if (formData.get("disable_notification"))
+          payload.disable_notification = true;
+        if (formData.get("reply_to_message_id"))
+          payload.reply_to_message_id = parseInt(
+            formData.get("reply_to_message_id")
+          );
+
+        try {
+          showLoading();
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+          displayResponse(data, !response.ok);
+        } catch (error) {
+          displayResponse({ error: error.message }, true);
+        }
+      }
+
+      async function sendPhoto(formData) {
+        const botToken = document.getElementById("botToken").value.trim();
+
+        if (!botToken) {
+          displayResponse({ error: "Bot token harus diisi!" }, true);
+          return;
+        }
+
+        const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+        const photoFile = document.getElementById("photoFile").files[0];
+        const photoUrl = document.getElementById("photoUrl").value.trim();
+
+        if (!photoFile && !photoUrl) {
+          displayResponse(
+            { error: "Pilih file gambar atau masukkan URL gambar!" },
+            true
+          );
+          return;
+        }
+
+        const payload = new FormData();
+        payload.append("chat_id", formData.get("chat_id"));
+
+        if (photoFile) {
+          payload.append("photo", photoFile);
+        } else {
+          payload.append("photo", photoUrl);
+        }
+
+        // Add optional parameters
+        if (formData.get("caption"))
+          payload.append("caption", formData.get("caption"));
+        if (formData.get("parse_mode"))
+          payload.append("parse_mode", formData.get("parse_mode"));
+        if (formData.get("disable_notification"))
+          payload.append("disable_notification", "true");
+        if (formData.get("reply_to_message_id"))
+          payload.append(
+            "reply_to_message_id",
+            formData.get("reply_to_message_id")
+          );
+
+        try {
+          showLoading();
+          const response = await fetch(url, {
+            method: "POST",
+            body: payload,
+          });
+
+          const data = await response.json();
+          displayResponse(data, !response.ok);
+        } catch (error) {
+          displayResponse({ error: error.message }, true);
+        }
+      }
+
+      // Event listeners
+      document
+        .getElementById("sendMessageForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData();
+
+          formData.append("chat_id", document.getElementById("chatId").value);
+          formData.append("text", document.getElementById("messageText").value);
+          formData.append(
+            "parse_mode",
+            document.getElementById("parseMode").value
+          );
+          if (document.getElementById("disableWebPagePreview").checked)
+            formData.append("disable_web_page_preview", "true");
+          if (document.getElementById("disableNotification").checked)
+            formData.append("disable_notification", "true");
+          if (document.getElementById("replyToMessageId").value)
+            formData.append(
+              "reply_to_message_id",
+              document.getElementById("replyToMessageId").value
+            );
+
+          await sendMessage(formData);
+        });
+
+      document
+        .getElementById("sendPhotoForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData();
+
+          formData.append(
+            "chat_id",
+            document.getElementById("photoChatId").value
+          );
+          if (document.getElementById("photoCaption").value)
+            formData.append(
+              "caption",
+              document.getElementById("photoCaption").value
+            );
+          formData.append(
+            "parse_mode",
+            document.getElementById("photoParseMode").value
+          );
+          if (document.getElementById("photoDisableNotification").checked)
+            formData.append("disable_notification", "true");
+          if (document.getElementById("photoReplyToMessageId").value)
+            formData.append(
+              "reply_to_message_id",
+              document.getElementById("photoReplyToMessageId").value
+            );
+
+          await sendPhoto(formData);
+        });
+
+      // File input label update
+      document
+        .getElementById("photoFile")
+        .addEventListener("change", function (e) {
+          const label = document.querySelector(".file-input-label");
+          const fileName = e.target.files[0]?.name;
+          if (fileName) {
+            label.textContent = `📁 ${fileName}`;
+            document.getElementById("photoUrl").value = ""; // Clear URL if file selected
+          } else {
+            label.textContent = "📁 Pilih File Gambar atau masukkan URL";
+          }
+        });
+
+      document
+        .getElementById("photoUrl")
+        .addEventListener("input", function (e) {
+          if (e.target.value.trim()) {
+            document.getElementById("photoFile").value = ""; // Clear file if URL entered
+            document.querySelector(".file-input-label").textContent =
+              "📁 Pilih File Gambar atau masukkan URL";
+          }
+        });
+    </script>
+  </body>
+</html>
