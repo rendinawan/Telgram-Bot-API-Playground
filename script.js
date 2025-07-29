@@ -74,6 +74,245 @@ function displayPayload(payload, method) {
   content.appendChild(document.createTextNode(payloadText));
 }
 
+function previewPayload(payload, method) {
+  const container = document.getElementById("payloadContainer");
+  const content = document.getElementById("payloadContent");
+
+  if (!container || !content) return;
+
+  const info = document.createElement("span");
+  info.className = "info";
+  info.textContent = `[Preview] ${method} Payload:`;
+
+  container.style.display = "block";
+
+  let payloadText;
+  if (payload instanceof FormData) {
+    // Convert FormData to readable object
+    const payloadObj = {};
+    for (let [key, value] of payload.entries()) {
+      if (value instanceof File) {
+        payloadObj[
+          key
+        ] = `[File: ${value.name}, ${value.type}, ${value.size} bytes]`;
+      } else {
+        payloadObj[key] = value;
+      }
+    }
+    payloadText = JSON.stringify(payloadObj, null, 2);
+  } else {
+    payloadText = JSON.stringify(payload, null, 2);
+  }
+
+  content.innerHTML = "";
+  content.appendChild(info);
+  content.appendChild(document.createElement("br"));
+  content.appendChild(document.createTextNode(payloadText));
+}
+
+function buildSendMessagePayload() {
+  const payload = {};
+
+  // Basic parameters
+  if (document.getElementById("businessConnectionId").value) {
+    payload.business_connection_id = document.getElementById(
+      "businessConnectionId"
+    ).value;
+  }
+  payload.chat_id = document.getElementById("chatId").value;
+  if (document.getElementById("messageThreadId").value) {
+    payload.message_thread_id = parseInt(
+      document.getElementById("messageThreadId").value
+    );
+  }
+  payload.text = document.getElementById("messageText").value;
+  if (document.getElementById("parseMode").value) {
+    payload.parse_mode = document.getElementById("parseMode").value;
+  }
+  if (document.getElementById("entities").value) {
+    try {
+      payload.entities = JSON.parse(document.getElementById("entities").value);
+    } catch (e) {
+      // Skip invalid JSON
+    }
+  }
+
+  // Link preview options
+  const linkPreviewOptions = {};
+  if (document.getElementById("linkPreviewUrl").value) {
+    linkPreviewOptions.url = document.getElementById("linkPreviewUrl").value;
+  }
+  if (document.getElementById("linkPreviewDisabled").checked) {
+    linkPreviewOptions.is_disabled = true;
+  }
+  if (document.getElementById("linkPreviewAboveText").checked) {
+    linkPreviewOptions.prefer_above_text = true;
+  }
+  if (document.getElementById("linkPreviewSmallMedia").checked) {
+    linkPreviewOptions.prefer_small_media = true;
+  }
+  if (document.getElementById("linkPreviewLargeMedia").checked) {
+    linkPreviewOptions.prefer_large_media = true;
+  }
+  if (Object.keys(linkPreviewOptions).length > 0) {
+    payload.link_preview_options = linkPreviewOptions;
+  }
+
+  // Deprecated option
+  if (document.getElementById("disableWebPagePreview").checked) {
+    payload.disable_web_page_preview = true;
+  }
+
+  // Message options
+  if (document.getElementById("disableNotification").checked) {
+    payload.disable_notification = true;
+  }
+  if (document.getElementById("protectContent").checked) {
+    payload.protect_content = true;
+  }
+  if (document.getElementById("allowPaidBroadcast").checked) {
+    payload.allow_paid_broadcast = true;
+  }
+  if (document.getElementById("messageEffectId").value) {
+    payload.message_effect_id =
+      document.getElementById("messageEffectId").value;
+  }
+
+  // Reply parameters
+  if (document.getElementById("replyToMessageId").value) {
+    const replyParameters = {
+      message_id: parseInt(document.getElementById("replyToMessageId").value),
+    };
+
+    if (document.getElementById("replyToChatId").value) {
+      replyParameters.chat_id = document.getElementById("replyToChatId").value;
+    }
+    if (document.getElementById("allowSendingWithoutReply").checked) {
+      replyParameters.allow_sending_without_reply = true;
+    }
+    if (document.getElementById("quote").value) {
+      replyParameters.quote = document.getElementById("quote").value;
+    }
+    if (document.getElementById("quoteParseMode").value) {
+      replyParameters.quote_parse_mode =
+        document.getElementById("quoteParseMode").value;
+    }
+    if (document.getElementById("quotePosition").value) {
+      replyParameters.quote_position = parseInt(
+        document.getElementById("quotePosition").value
+      );
+    }
+
+    payload.reply_parameters = replyParameters;
+  }
+
+  return payload;
+}
+
+function buildSendPhotoPayload() {
+  const payload = new FormData();
+
+  // Basic parameters
+  if (document.getElementById("photoBusinessConnectionId").value) {
+    payload.append(
+      "business_connection_id",
+      document.getElementById("photoBusinessConnectionId").value
+    );
+  }
+  payload.append("chat_id", document.getElementById("photoChatId").value);
+  if (document.getElementById("photoMessageThreadId").value) {
+    payload.append(
+      "message_thread_id",
+      document.getElementById("photoMessageThreadId").value
+    );
+  }
+
+  // Photo
+  const photoFile = document.getElementById("photoFile").files[0];
+  const photoUrl = document.getElementById("photoUrl").value;
+
+  if (photoFile) {
+    payload.append("photo", photoFile);
+  } else if (photoUrl) {
+    payload.append("photo", photoUrl);
+  }
+
+  if (document.getElementById("photoCaption").value) {
+    payload.append("caption", document.getElementById("photoCaption").value);
+  }
+  if (document.getElementById("photoParseMode").value) {
+    payload.append(
+      "parse_mode",
+      document.getElementById("photoParseMode").value
+    );
+  }
+  if (document.getElementById("photoCaptionEntities").value) {
+    payload.append(
+      "caption_entities",
+      document.getElementById("photoCaptionEntities").value
+    );
+  }
+
+  // Media options
+  if (document.getElementById("showCaptionAboveMedia").checked) {
+    payload.append("show_caption_above_media", "true");
+  }
+  if (document.getElementById("hasSpoiler").checked) {
+    payload.append("has_spoiler", "true");
+  }
+
+  // Message options
+  if (document.getElementById("photoDisableNotification").checked) {
+    payload.append("disable_notification", "true");
+  }
+  if (document.getElementById("photoProtectContent").checked) {
+    payload.append("protect_content", "true");
+  }
+  if (document.getElementById("photoAllowPaidBroadcast").checked) {
+    payload.append("allow_paid_broadcast", "true");
+  }
+  if (document.getElementById("photoMessageEffectId").value) {
+    payload.append(
+      "message_effect_id",
+      document.getElementById("photoMessageEffectId").value
+    );
+  }
+
+  // Reply parameters
+  if (document.getElementById("photoReplyToMessageId").value) {
+    const replyParameters = {
+      message_id: parseInt(
+        document.getElementById("photoReplyToMessageId").value
+      ),
+    };
+
+    if (document.getElementById("photoReplyToChatId").value) {
+      replyParameters.chat_id =
+        document.getElementById("photoReplyToChatId").value;
+    }
+    if (document.getElementById("photoAllowSendingWithoutReply").checked) {
+      replyParameters.allow_sending_without_reply = true;
+    }
+    if (document.getElementById("photoQuote").value) {
+      replyParameters.quote = document.getElementById("photoQuote").value;
+    }
+    if (document.getElementById("photoQuoteParseMode").value) {
+      replyParameters.quote_parse_mode = document.getElementById(
+        "photoQuoteParseMode"
+      ).value;
+    }
+    if (document.getElementById("photoQuotePosition").value) {
+      replyParameters.quote_position = parseInt(
+        document.getElementById("photoQuotePosition").value
+      );
+    }
+
+    payload.append("reply_parameters", JSON.stringify(replyParameters));
+  }
+
+  return payload;
+}
+
 function showLoading() {
   const responseContainer = document.getElementById("responseContent");
   responseContainer.innerHTML =
@@ -446,4 +685,61 @@ document.addEventListener("DOMContentLoaded", function () {
       content.classList.toggle("collapsed");
     });
   });
+
+  // Preview payload functionality
+  const previewModeCheckbox = document.getElementById("previewMode");
+  const sendMessageForm = document.getElementById("sendMessageForm");
+  const sendPhotoForm = document.getElementById("sendPhotoForm");
+
+  function updatePreview() {
+    if (!previewModeCheckbox.checked) return;
+
+    const activeForm =
+      sendMessageForm.style.display !== "none"
+        ? sendMessageForm
+        : sendPhotoForm;
+
+    if (activeForm === sendMessageForm) {
+      const payload = buildSendMessagePayload();
+      if (payload.chat_id && payload.text) {
+        // Only preview if required fields are filled
+        previewPayload(payload, "sendMessage");
+      }
+    } else {
+      const payload = buildSendPhotoPayload();
+      const hasPhoto =
+        document.getElementById("photoFile").files[0] ||
+        document.getElementById("photoUrl").value;
+      if (payload.get("chat_id") && hasPhoto) {
+        // Only preview if required fields are filled
+        previewPayload(payload, "sendPhoto");
+      }
+    }
+  }
+
+  // Add event listeners for preview mode toggle
+  previewModeCheckbox.addEventListener("change", function () {
+    if (this.checked) {
+      updatePreview();
+    } else {
+      // Clear payload container when preview mode is disabled
+      const container = document.getElementById("payloadContainer");
+      const content = document.getElementById("payloadContent");
+      container.style.display = "block";
+      content.innerHTML =
+        "Belum ada payload. Kirim pesan untuk melihat payload yang dikirim...";
+    }
+  });
+
+  // Add event listeners to form inputs for real-time preview
+  const formInputs = document.querySelectorAll("input, textarea, select");
+  formInputs.forEach((input) => {
+    input.addEventListener("input", updatePreview);
+    input.addEventListener("change", updatePreview);
+  });
+
+  // Special handling for file input
+  document
+    .getElementById("photoFile")
+    .addEventListener("change", updatePreview);
 });
