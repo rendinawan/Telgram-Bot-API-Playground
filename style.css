@@ -74,6 +74,11 @@ body {
   overflow-y: auto;
 }
 
+.right-panel {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
 .bot-token-section {
   background: white;
   padding: 20px;
@@ -175,23 +180,27 @@ body {
 
 /* Custom scrollbar styling */
 .left-panel::-webkit-scrollbar,
+.right-panel::-webkit-scrollbar,
 .method-form::-webkit-scrollbar {
   width: 6px;
 }
 
 .left-panel::-webkit-scrollbar-track,
+.right-panel::-webkit-scrollbar-track,
 .method-form::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
 .left-panel::-webkit-scrollbar-thumb,
+.right-panel::-webkit-scrollbar-thumb,
 .method-form::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 3px;
 }
 
 .left-panel::-webkit-scrollbar-thumb:hover,
+.right-panel::-webkit-scrollbar-thumb:hover,
 .method-form::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
