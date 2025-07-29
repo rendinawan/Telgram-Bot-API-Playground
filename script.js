@@ -82,7 +82,7 @@ function previewPayload(payload, method) {
 
   const info = document.createElement("span");
   info.className = "info";
-  info.textContent = `[Preview] ${method} Payload:`;
+  info.textContent = `[Preview] api.telegram.org/bot{token}/${method} Payload:`;
 
   container.style.display = "block";
 
