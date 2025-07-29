@@ -1,6 +1,10 @@
 # 🤖 Telegram Bot API Playground
 
-A comprehensive web-based tool for testing and learning the Telegram Bot API. This playground provides an intuitive interface to interact with Telegram Bot API methods with all available parameters, real-time payload visualization, and response handling.
+A comprehensive web-based tool for testing and learning the Telegram Bot API. This playground provides an intuitive interface to interact with Telegram Bot API methods with all available parameters, real-time 
+payload visualization, and response handling.
+
+<img width="1226" height="935" alt="image" src="https://github.com/user-attachments/assets/d19a1c27-a88b-4455-bbc5-2166146c6813" />
+
 
 ## ✨ Features
 
