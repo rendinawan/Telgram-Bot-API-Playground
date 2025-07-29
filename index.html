@@ -302,6 +302,44 @@
               </div>
             </div>
 
+            <!-- Reply Markup -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ⌨️ Reply Markup
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="replyMarkup">Reply Markup (JSON):</label>
+                  <textarea
+                    id="replyMarkup"
+                    placeholder='{"inline_keyboard":[[{"text":"Button","callback_data":"data"}]]}'
+                    rows="4"
+                  ></textarea>
+                  <small
+                    >JSON object for inline keyboard, reply keyboard, remove keyboard, or force reply</small
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label>Common Examples:</label>
+                  <div class="markup-examples">
+                    <button type="button" class="example-btn" onclick="setReplyMarkupExample('inline')">
+                      Inline Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setReplyMarkupExample('keyboard')">
+                      Reply Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setReplyMarkupExample('remove')">
+                      Remove Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setReplyMarkupExample('force')">
+                      Force Reply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button type="submit" class="send-button">🚀 Send Message</button>
           </form>
 
@@ -552,6 +590,44 @@
                     >Position of the quote in the original message in UTF-16
                     code units</small
                   >
+                </div>
+              </div>
+            </div>
+
+            <!-- Reply Markup -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ⌨️ Reply Markup
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="photoReplyMarkup">Reply Markup (JSON):</label>
+                  <textarea
+                    id="photoReplyMarkup"
+                    placeholder='{"inline_keyboard":[[{"text":"Button","callback_data":"data"}]]}'
+                    rows="4"
+                  ></textarea>
+                  <small
+                    >JSON object for inline keyboard, reply keyboard, remove keyboard, or force reply</small
+                  >
+                </div>
+                
+                <div class="form-group">
+                  <label>Common Examples:</label>
+                  <div class="markup-examples">
+                    <button type="button" class="example-btn" onclick="setPhotoReplyMarkupExample('inline')">
+                      Inline Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setPhotoReplyMarkupExample('keyboard')">
+                      Reply Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setPhotoReplyMarkupExample('remove')">
+                      Remove Keyboard
+                    </button>
+                    <button type="button" class="example-btn" onclick="setPhotoReplyMarkupExample('force')">
+                      Force Reply
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -206,6 +206,15 @@ function buildSendMessagePayload() {
     payload.reply_parameters = replyParameters;
   }
 
+  // Reply markup
+  if (document.getElementById("replyMarkup").value) {
+    try {
+      payload.reply_markup = JSON.parse(document.getElementById("replyMarkup").value);
+    } catch (e) {
+      // Skip invalid JSON
+    }
+  }
+
   return payload;
 }
 
@@ -310,6 +319,15 @@ function buildSendPhotoPayload() {
     payload.append("reply_parameters", JSON.stringify(replyParameters));
   }
 
+  // Reply markup
+  if (document.getElementById("photoReplyMarkup").value) {
+    try {
+      payload.append("reply_markup", document.getElementById("photoReplyMarkup").value);
+    } catch (e) {
+      // Skip invalid JSON
+    }
+  }
+
   return payload;
 }
 
@@ -394,6 +412,15 @@ async function sendMessage(formData) {
       replyParameters.quote_position = parseInt(formData.get("quote_position"));
 
     payload.reply_parameters = replyParameters;
+  }
+
+  // Reply markup
+  if (formData.get("reply_markup")) {
+    try {
+      payload.reply_markup = JSON.parse(formData.get("reply_markup"));
+    } catch (e) {
+      // Skip invalid JSON
+    }
   }
 
   try {
@@ -498,6 +525,11 @@ async function sendPhoto(formData) {
     payload.append("reply_parameters", JSON.stringify(replyParameters));
   }
 
+  // Reply markup
+  if (formData.get("reply_markup")) {
+    payload.append("reply_markup", formData.get("reply_markup"));
+  }
+
   try {
     // Display the payload before sending
     displayPayload(payload, "sendPhoto");
@@ -584,6 +616,9 @@ document
       document.getElementById("quotePosition").value
     );
 
+    // Reply markup
+    formData.append("reply_markup", document.getElementById("replyMarkup").value);
+
     await sendMessage(formData);
   });
 
@@ -648,6 +683,9 @@ document
       "quote_position",
       document.getElementById("photoQuotePosition").value
     );
+
+    // Reply markup
+    formData.append("reply_markup", document.getElementById("photoReplyMarkup").value);
 
     await sendPhoto(formData);
   });
@@ -743,3 +781,103 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("photoFile")
     .addEventListener("change", updatePreview);
 });
+
+// Reply markup examples
+function setReplyMarkupExample(type) {
+  const textarea = document.getElementById("replyMarkup");
+  let example = "";
+
+  switch (type) {
+    case "inline":
+      example = JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: "Option 1", callback_data: "option_1" },
+            { text: "Option 2", callback_data: "option_2" }
+          ],
+          [
+            { text: "Visit Website", url: "https://example.com" }
+          ]
+        ]
+      }, null, 2);
+      break;
+    case "keyboard":
+      example = JSON.stringify({
+        keyboard: [
+          [{ text: "Button 1" }, { text: "Button 2" }],
+          [{ text: "Contact", request_contact: true }],
+          [{ text: "Location", request_location: true }]
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true
+      }, null, 2);
+      break;
+    case "remove":
+      example = JSON.stringify({
+        remove_keyboard: true
+      }, null, 2);
+      break;
+    case "force":
+      example = JSON.stringify({
+        force_reply: true,
+        input_field_placeholder: "Type your reply here..."
+      }, null, 2);
+      break;
+  }
+
+  textarea.value = example;
+  // Trigger preview update if preview mode is enabled
+  if (document.getElementById("previewMode").checked) {
+    const event = new Event("input", { bubbles: true });
+    textarea.dispatchEvent(event);
+  }
+}
+
+function setPhotoReplyMarkupExample(type) {
+  const textarea = document.getElementById("photoReplyMarkup");
+  let example = "";
+
+  switch (type) {
+    case "inline":
+      example = JSON.stringify({
+        inline_keyboard: [
+          [
+            { text: "Like ❤️", callback_data: "like" },
+            { text: "Share 📤", callback_data: "share" }
+          ],
+          [
+            { text: "More Photos", callback_data: "more_photos" }
+          ]
+        ]
+      }, null, 2);
+      break;
+    case "keyboard":
+      example = JSON.stringify({
+        keyboard: [
+          [{ text: "📷 More Photos" }, { text: "💬 Comment" }],
+          [{ text: "👍 Like" }, { text: "📤 Share" }]
+        ],
+        resize_keyboard: true,
+        one_time_keyboard: true
+      }, null, 2);
+      break;
+    case "remove":
+      example = JSON.stringify({
+        remove_keyboard: true
+      }, null, 2);
+      break;
+    case "force":
+      example = JSON.stringify({
+        force_reply: true,
+        input_field_placeholder: "What do you think about this photo?"
+      }, null, 2);
+      break;
+  }
+
+  textarea.value = example;
+  // Trigger preview update if preview mode is enabled
+  if (document.getElementById("previewMode").checked) {
+    const event = new Event("input", { bubbles: true });
+    textarea.dispatchEvent(event);
+  }
+}
