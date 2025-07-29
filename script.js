@@ -58,13 +58,66 @@ async function sendMessage(formData) {
   };
 
   // Add optional parameters
+  if (formData.get("business_connection_id"))
+    payload.business_connection_id = formData.get("business_connection_id");
+  if (formData.get("message_thread_id"))
+    payload.message_thread_id = parseInt(formData.get("message_thread_id"));
   if (formData.get("parse_mode"))
     payload.parse_mode = formData.get("parse_mode");
+  if (formData.get("entities")) {
+    try {
+      payload.entities = JSON.parse(formData.get("entities"));
+    } catch (e) {
+      displayResponse({ error: "Invalid JSON format in entities field" }, true);
+      return;
+    }
+  }
+
+  // Link preview options
+  const linkPreviewOptions = {};
+  if (formData.get("link_preview_url"))
+    linkPreviewOptions.url = formData.get("link_preview_url");
+  if (formData.get("link_preview_disabled"))
+    linkPreviewOptions.is_disabled = true;
+  if (formData.get("link_preview_above_text"))
+    linkPreviewOptions.prefer_large_media = true;
+  if (formData.get("link_preview_small_media"))
+    linkPreviewOptions.prefer_small_media = true;
+  if (formData.get("link_preview_large_media"))
+    linkPreviewOptions.prefer_large_media = true;
+  if (formData.get("link_preview_above_text"))
+    linkPreviewOptions.show_above_text = true;
+
+  if (Object.keys(linkPreviewOptions).length > 0) {
+    payload.link_preview_options = linkPreviewOptions;
+  }
+
   if (formData.get("disable_web_page_preview"))
     payload.disable_web_page_preview = true;
   if (formData.get("disable_notification")) payload.disable_notification = true;
-  if (formData.get("reply_to_message_id"))
-    payload.reply_to_message_id = parseInt(formData.get("reply_to_message_id"));
+  if (formData.get("protect_content")) payload.protect_content = true;
+  if (formData.get("allow_paid_broadcast")) payload.allow_paid_broadcast = true;
+  if (formData.get("message_effect_id"))
+    payload.message_effect_id = formData.get("message_effect_id");
+
+  // Reply parameters
+  if (formData.get("reply_to_message_id")) {
+    const replyParameters = {
+      message_id: parseInt(formData.get("reply_to_message_id")),
+    };
+
+    if (formData.get("reply_to_chat_id"))
+      replyParameters.chat_id = formData.get("reply_to_chat_id");
+    if (formData.get("allow_sending_without_reply"))
+      replyParameters.allow_sending_without_reply = true;
+    if (formData.get("quote")) replyParameters.quote = formData.get("quote");
+    if (formData.get("quote_parse_mode"))
+      replyParameters.quote_parse_mode = formData.get("quote_parse_mode");
+    if (formData.get("quote_position"))
+      replyParameters.quote_position = parseInt(formData.get("quote_position"));
+
+    payload.reply_parameters = replyParameters;
+  }
 
   try {
     showLoading();
@@ -111,14 +164,59 @@ async function sendPhoto(formData) {
   }
 
   // Add optional parameters
+  if (formData.get("business_connection_id"))
+    payload.append(
+      "business_connection_id",
+      formData.get("business_connection_id")
+    );
+  if (formData.get("message_thread_id"))
+    payload.append("message_thread_id", formData.get("message_thread_id"));
   if (formData.get("caption"))
     payload.append("caption", formData.get("caption"));
   if (formData.get("parse_mode"))
     payload.append("parse_mode", formData.get("parse_mode"));
+  if (formData.get("caption_entities")) {
+    try {
+      JSON.parse(formData.get("caption_entities")); // Validate JSON
+      payload.append("caption_entities", formData.get("caption_entities"));
+    } catch (e) {
+      displayResponse(
+        { error: "Invalid JSON format in caption_entities field" },
+        true
+      );
+      return;
+    }
+  }
+  if (formData.get("show_caption_above_media"))
+    payload.append("show_caption_above_media", "true");
+  if (formData.get("has_spoiler")) payload.append("has_spoiler", "true");
   if (formData.get("disable_notification"))
     payload.append("disable_notification", "true");
-  if (formData.get("reply_to_message_id"))
-    payload.append("reply_to_message_id", formData.get("reply_to_message_id"));
+  if (formData.get("protect_content"))
+    payload.append("protect_content", "true");
+  if (formData.get("allow_paid_broadcast"))
+    payload.append("allow_paid_broadcast", "true");
+  if (formData.get("message_effect_id"))
+    payload.append("message_effect_id", formData.get("message_effect_id"));
+
+  // Reply parameters
+  if (formData.get("reply_to_message_id")) {
+    const replyParameters = {
+      message_id: parseInt(formData.get("reply_to_message_id")),
+    };
+
+    if (formData.get("reply_to_chat_id"))
+      replyParameters.chat_id = formData.get("reply_to_chat_id");
+    if (formData.get("allow_sending_without_reply"))
+      replyParameters.allow_sending_without_reply = true;
+    if (formData.get("quote")) replyParameters.quote = formData.get("quote");
+    if (formData.get("quote_parse_mode"))
+      replyParameters.quote_parse_mode = formData.get("quote_parse_mode");
+    if (formData.get("quote_position"))
+      replyParameters.quote_position = parseInt(formData.get("quote_position"));
+
+    payload.append("reply_parameters", JSON.stringify(replyParameters));
+  }
 
   try {
     showLoading();
@@ -141,18 +239,67 @@ document
     e.preventDefault();
     const formData = new FormData();
 
+    formData.append(
+      "business_connection_id",
+      document.getElementById("businessConnectionId").value
+    );
     formData.append("chat_id", document.getElementById("chatId").value);
+    formData.append(
+      "message_thread_id",
+      document.getElementById("messageThreadId").value
+    );
     formData.append("text", document.getElementById("messageText").value);
     formData.append("parse_mode", document.getElementById("parseMode").value);
+    formData.append("entities", document.getElementById("entities").value);
+
+    // Link preview options
+    formData.append(
+      "link_preview_url",
+      document.getElementById("linkPreviewUrl").value
+    );
+    if (document.getElementById("linkPreviewDisabled").checked)
+      formData.append("link_preview_disabled", "true");
+    if (document.getElementById("linkPreviewAboveText").checked)
+      formData.append("link_preview_above_text", "true");
+    if (document.getElementById("linkPreviewSmallMedia").checked)
+      formData.append("link_preview_small_media", "true");
+    if (document.getElementById("linkPreviewLargeMedia").checked)
+      formData.append("link_preview_large_media", "true");
+
     if (document.getElementById("disableWebPagePreview").checked)
       formData.append("disable_web_page_preview", "true");
     if (document.getElementById("disableNotification").checked)
       formData.append("disable_notification", "true");
-    if (document.getElementById("replyToMessageId").value)
-      formData.append(
-        "reply_to_message_id",
-        document.getElementById("replyToMessageId").value
-      );
+    if (document.getElementById("protectContent").checked)
+      formData.append("protect_content", "true");
+    if (document.getElementById("allowPaidBroadcast").checked)
+      formData.append("allow_paid_broadcast", "true");
+
+    formData.append(
+      "message_effect_id",
+      document.getElementById("messageEffectId").value
+    );
+    formData.append(
+      "reply_to_message_id",
+      document.getElementById("replyToMessageId").value
+    );
+    formData.append(
+      "reply_to_chat_id",
+      document.getElementById("replyToChatId").value
+    );
+
+    if (document.getElementById("allowSendingWithoutReply").checked)
+      formData.append("allow_sending_without_reply", "true");
+
+    formData.append("quote", document.getElementById("quote").value);
+    formData.append(
+      "quote_parse_mode",
+      document.getElementById("quoteParseMode").value
+    );
+    formData.append(
+      "quote_position",
+      document.getElementById("quotePosition").value
+    );
 
     await sendMessage(formData);
   });
@@ -163,20 +310,61 @@ document
     e.preventDefault();
     const formData = new FormData();
 
+    formData.append(
+      "business_connection_id",
+      document.getElementById("photoBusinessConnectionId").value
+    );
     formData.append("chat_id", document.getElementById("photoChatId").value);
-    if (document.getElementById("photoCaption").value)
-      formData.append("caption", document.getElementById("photoCaption").value);
+    formData.append(
+      "message_thread_id",
+      document.getElementById("photoMessageThreadId").value
+    );
+    formData.append("caption", document.getElementById("photoCaption").value);
     formData.append(
       "parse_mode",
       document.getElementById("photoParseMode").value
     );
+    formData.append(
+      "caption_entities",
+      document.getElementById("photoCaptionEntities").value
+    );
+
+    if (document.getElementById("showCaptionAboveMedia").checked)
+      formData.append("show_caption_above_media", "true");
+    if (document.getElementById("hasSpoiler").checked)
+      formData.append("has_spoiler", "true");
     if (document.getElementById("photoDisableNotification").checked)
       formData.append("disable_notification", "true");
-    if (document.getElementById("photoReplyToMessageId").value)
-      formData.append(
-        "reply_to_message_id",
-        document.getElementById("photoReplyToMessageId").value
-      );
+    if (document.getElementById("photoProtectContent").checked)
+      formData.append("protect_content", "true");
+    if (document.getElementById("photoAllowPaidBroadcast").checked)
+      formData.append("allow_paid_broadcast", "true");
+
+    formData.append(
+      "message_effect_id",
+      document.getElementById("photoMessageEffectId").value
+    );
+    formData.append(
+      "reply_to_message_id",
+      document.getElementById("photoReplyToMessageId").value
+    );
+    formData.append(
+      "reply_to_chat_id",
+      document.getElementById("photoReplyToChatId").value
+    );
+
+    if (document.getElementById("photoAllowSendingWithoutReply").checked)
+      formData.append("allow_sending_without_reply", "true");
+
+    formData.append("quote", document.getElementById("photoQuote").value);
+    formData.append(
+      "quote_parse_mode",
+      document.getElementById("photoQuoteParseMode").value
+    );
+    formData.append(
+      "quote_position",
+      document.getElementById("photoQuotePosition").value
+    );
 
     await sendPhoto(formData);
   });
@@ -199,4 +387,19 @@ document.getElementById("photoUrl").addEventListener("input", function (e) {
     document.querySelector(".file-input-label").textContent =
       "📁 Pilih File Gambar atau masukkan URL";
   }
+});
+
+// Collapsible sections functionality
+document.addEventListener("DOMContentLoaded", function () {
+  const sectionHeaders = document.querySelectorAll(".param-section-header");
+
+  sectionHeaders.forEach((header) => {
+    header.addEventListener("click", function () {
+      const content = this.nextElementSibling;
+
+      // Toggle collapsed class
+      this.classList.toggle("collapsed");
+      content.classList.toggle("collapsed");
+    });
+  });
 });

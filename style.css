@@ -70,6 +70,8 @@ body {
 .left-panel {
   border-right: 1px solid #e0e0e0;
   background: #fafafa;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .bot-token-section {
@@ -122,10 +124,12 @@ body {
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid #e0e0e0;
+  max-height: calc(100vh - 350px);
+  overflow-y: auto;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .form-group label {
@@ -140,9 +144,9 @@ body {
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 12px 15px;
+  padding: 10px 12px;
   border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 14px;
   transition: all 0.3s ease;
   background: #fafafa;
@@ -159,7 +163,7 @@ body {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 60px;
 }
 
 .form-group small {
@@ -167,6 +171,79 @@ body {
   font-size: 0.8rem;
   margin-top: 5px;
   display: block;
+}
+
+/* Custom scrollbar styling */
+.left-panel::-webkit-scrollbar,
+.method-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.left-panel::-webkit-scrollbar-track,
+.method-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.left-panel::-webkit-scrollbar-thumb,
+.method-form::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover,
+.method-form::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Parameter sections */
+.param-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.param-section-header {
+  background: #f8f9fa;
+  padding: 12px 15px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.param-section-header:hover {
+  background: #e9ecef;
+}
+
+.param-section-header::after {
+  content: "▼";
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.param-section-header.collapsed::after {
+  transform: rotate(-90deg);
+}
+
+.param-section-content {
+  padding: 15px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 1000px;
+  opacity: 1;
+}
+
+.param-section-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 15px;
+  overflow: hidden;
 }
 
 .send-button {

@@ -43,55 +43,259 @@
           <form id="sendMessageForm" class="method-form">
             <h3>📝 Send Message</h3>
 
-            <div class="form-group">
-              <label for="chatId">Chat ID: *</label>
-              <input
-                type="text"
-                id="chatId"
-                required
-                placeholder="@username atau chat_id"
-              />
-              <small>ID chat atau username channel/grup</small>
+            <!-- Basic Parameters -->
+            <div class="param-section">
+              <div class="param-section-header">📋 Basic Parameters</div>
+              <div class="param-section-content">
+                <div class="form-group">
+                  <label for="chatId">Chat ID: *</label>
+                  <input
+                    type="text"
+                    id="chatId"
+                    required
+                    placeholder="@username atau chat_id"
+                  />
+                  <small>ID chat atau username channel/grup</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="messageText">Text: *</label>
+                  <textarea
+                    id="messageText"
+                    required
+                    placeholder="Halo! Ini pesan dari bot."
+                  ></textarea>
+                  <small
+                    >Teks pesan yang akan dikirim (mendukung Markdown)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="parseMode">Parse Mode:</label>
+                  <select id="parseMode">
+                    <option value="">None</option>
+                    <option value="Markdown">Markdown</option>
+                    <option value="MarkdownV2">MarkdownV2</option>
+                    <option value="HTML">HTML</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="messageText">Text: *</label>
-              <textarea
-                id="messageText"
-                required
-                placeholder="Halo! Ini pesan dari bot."
-              ></textarea>
-              <small>Teks pesan yang akan dikirim (mendukung Markdown)</small>
+            <!-- Advanced Parameters -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ⚙️ Advanced Parameters
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="businessConnectionId"
+                    >Business Connection ID:</label
+                  >
+                  <input
+                    type="text"
+                    id="businessConnectionId"
+                    placeholder="business_connection_id"
+                  />
+                  <small>Unique identifier for business connection</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="messageThreadId">Message Thread ID:</label>
+                  <input
+                    type="number"
+                    id="messageThreadId"
+                    placeholder="123456"
+                  />
+                  <small
+                    >Unique identifier for the target message thread (for forum
+                    supergroups)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="entities">Message Entities (JSON):</label>
+                  <textarea
+                    id="entities"
+                    placeholder='[{"type":"bold","offset":0,"length":5}]'
+                  ></textarea>
+                  <small
+                    >JSON array of special entities (alternative to
+                    parse_mode)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="messageEffectId">Message Effect ID:</label>
+                  <input
+                    type="text"
+                    id="messageEffectId"
+                    placeholder="effect_id"
+                  />
+                  <small
+                    >Unique identifier of the message effect (for private chats
+                    only)</small
+                  >
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="parseMode">Parse Mode:</label>
-              <select id="parseMode">
-                <option value="">None</option>
-                <option value="Markdown">Markdown</option>
-                <option value="MarkdownV2">MarkdownV2</option>
-                <option value="HTML">HTML</option>
-              </select>
+            <!-- Link Preview Options -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                🔗 Link Preview Options
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="linkPreviewUrl">Link Preview URL:</label>
+                  <input
+                    type="url"
+                    id="linkPreviewUrl"
+                    placeholder="https://example.com"
+                  />
+                  <small>URL for link preview generation</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="linkPreviewDisabled">
+                    <input type="checkbox" id="linkPreviewDisabled" /> Disable
+                    Link Preview
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="linkPreviewAboveText">
+                    <input type="checkbox" id="linkPreviewAboveText" /> Show
+                    Link Preview Above Text
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="linkPreviewSmallMedia">
+                    <input type="checkbox" id="linkPreviewSmallMedia" /> Use
+                    Small Media in Link Preview
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="linkPreviewLargeMedia">
+                    <input type="checkbox" id="linkPreviewLargeMedia" /> Use
+                    Large Media in Link Preview
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="disableWebPagePreview">
+                    <input type="checkbox" id="disableWebPagePreview" /> Disable
+                    Web Page Preview (deprecated)
+                  </label>
+                  <small>Use link preview options instead</small>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="disableWebPagePreview">
-                <input type="checkbox" id="disableWebPagePreview" /> Disable Web
-                Page Preview
-              </label>
+            <!-- Message Options -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                🔧 Message Options
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="disableNotification">
+                    <input type="checkbox" id="disableNotification" /> Disable
+                    Notification
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="protectContent">
+                    <input type="checkbox" id="protectContent" /> Protect
+                    Content
+                  </label>
+                  <small>Protects the message from forwarding and saving</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="allowPaidBroadcast">
+                    <input type="checkbox" id="allowPaidBroadcast" /> Allow Paid
+                    Broadcast
+                  </label>
+                  <small
+                    >Allow up to 1000 messages per second (costs Stars)</small
+                  >
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="disableNotification">
-                <input type="checkbox" id="disableNotification" /> Disable
-                Notification
-              </label>
-            </div>
+            <!-- Reply Parameters -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ↩️ Reply Parameters
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="replyToMessageId">Reply to Message ID:</label>
+                  <input
+                    type="number"
+                    id="replyToMessageId"
+                    placeholder="123456"
+                  />
+                  <small>ID pesan yang akan di-reply</small>
+                </div>
 
-            <div class="form-group">
-              <label for="replyToMessageId">Reply to Message ID:</label>
-              <input type="number" id="replyToMessageId" placeholder="123456" />
-              <small>ID pesan yang akan di-reply</small>
+                <div class="form-group">
+                  <label for="replyToChatId">Reply to Chat ID:</label>
+                  <input
+                    type="text"
+                    id="replyToChatId"
+                    placeholder="@username atau chat_id"
+                  />
+                  <small
+                    >Chat ID if replying to message from different chat</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="allowSendingWithoutReply">
+                    <input type="checkbox" id="allowSendingWithoutReply" />
+                    Allow Sending Without Reply
+                  </label>
+                  <small
+                    >Send message even if replied message is not found</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="quote">Quote Text:</label>
+                  <textarea
+                    id="quote"
+                    placeholder="Part of message to quote..."
+                  ></textarea>
+                  <small
+                    >Quoted part of the message to be replied to (0-1024
+                    characters)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="quoteParseMode">Quote Parse Mode:</label>
+                  <select id="quoteParseMode">
+                    <option value="">None</option>
+                    <option value="Markdown">Markdown</option>
+                    <option value="MarkdownV2">MarkdownV2</option>
+                    <option value="HTML">HTML</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="quotePosition">Quote Position:</label>
+                  <input type="number" id="quotePosition" placeholder="0" />
+                  <small
+                    >Position of the quote in the original message in UTF-16
+                    code units</small
+                  >
+                </div>
+              </div>
             </div>
 
             <button type="submit" class="send-button">🚀 Send Message</button>
@@ -100,71 +304,252 @@
           <form id="sendPhotoForm" class="method-form hidden">
             <h3>📸 Send Photo</h3>
 
-            <div class="form-group">
-              <label for="photoChatId">Chat ID: *</label>
-              <input
-                type="text"
-                id="photoChatId"
-                required
-                placeholder="@username atau chat_id"
-              />
-              <small>ID chat atau username channel/grup</small>
-            </div>
+            <!-- Basic Parameters -->
+            <div class="param-section">
+              <div class="param-section-header">📋 Basic Parameters</div>
+              <div class="param-section-content">
+                <div class="form-group">
+                  <label for="photoChatId">Chat ID: *</label>
+                  <input
+                    type="text"
+                    id="photoChatId"
+                    required
+                    placeholder="@username atau chat_id"
+                  />
+                  <small>ID chat atau username channel/grup</small>
+                </div>
 
-            <div class="form-group">
-              <label for="photoInput">Photo: *</label>
-              <div class="file-input-container">
-                <label for="photoFile" class="file-input-label">
-                  📁 Pilih File Gambar atau masukkan URL
-                </label>
-                <input
-                  type="file"
-                  id="photoFile"
-                  class="file-input"
-                  accept="image/*"
-                />
+                <div class="form-group">
+                  <label for="photoInput">Photo: *</label>
+                  <div class="file-input-container">
+                    <label for="photoFile" class="file-input-label">
+                      📁 Pilih File Gambar atau masukkan URL
+                    </label>
+                    <input
+                      type="file"
+                      id="photoFile"
+                      class="file-input"
+                      accept="image/*"
+                    />
+                  </div>
+                  <small>Upload file gambar atau masukkan URL gambar</small>
+                </div>
+                <div class="form-group">
+                  <label for="photoUrl">Atau URL Gambar:</label>
+                  <input
+                    type="url"
+                    id="photoUrl"
+                    placeholder="https://example.com/photo.jpg"
+                    style="margin-top: 10px"
+                  />
+                  <small>Masukkan URL gambar jika tidak mengupload file</small>
+                </div>
+                <div class="form-group">
+                  <label for="photoCaption">Caption:</label>
+                  <textarea
+                    id="photoCaption"
+                    placeholder="Caption untuk foto..."
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoParseMode">Parse Mode:</label>
+                  <select id="photoParseMode">
+                    <option value="">None</option>
+                    <option value="Markdown">Markdown</option>
+                    <option value="MarkdownV2">MarkdownV2</option>
+                    <option value="HTML">HTML</option>
+                  </select>
+                </div>
               </div>
-              <input
-                type="url"
-                id="photoUrl"
-                placeholder="https://example.com/photo.jpg"
-                style="margin-top: 10px"
-              />
-              <small>Upload file gambar atau masukkan URL gambar</small>
             </div>
 
-            <div class="form-group">
-              <label for="photoCaption">Caption:</label>
-              <textarea
-                id="photoCaption"
-                placeholder="Caption untuk foto..."
-              ></textarea>
+            <!-- Advanced Parameters -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ⚙️ Advanced Parameters
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="photoBusinessConnectionId"
+                    >Business Connection ID:</label
+                  >
+                  <input
+                    type="text"
+                    id="photoBusinessConnectionId"
+                    placeholder="business_connection_id"
+                  />
+                  <small>Unique identifier for business connection</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoMessageThreadId">Message Thread ID:</label>
+                  <input
+                    type="number"
+                    id="photoMessageThreadId"
+                    placeholder="123456"
+                  />
+                  <small
+                    >Unique identifier for the target message thread (for forum
+                    supergroups)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="photoCaptionEntities"
+                    >Caption Entities (JSON):</label
+                  >
+                  <textarea
+                    id="photoCaptionEntities"
+                    placeholder='[{"type":"bold","offset":0,"length":5}]'
+                  ></textarea>
+                  <small
+                    >JSON array of special entities in caption (alternative to
+                    parse_mode)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="photoMessageEffectId">Message Effect ID:</label>
+                  <input
+                    type="text"
+                    id="photoMessageEffectId"
+                    placeholder="effect_id"
+                  />
+                  <small
+                    >Unique identifier of the message effect (for private chats
+                    only)</small
+                  >
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="photoParseMode">Parse Mode:</label>
-              <select id="photoParseMode">
-                <option value="">None</option>
-                <option value="Markdown">Markdown</option>
-                <option value="MarkdownV2">MarkdownV2</option>
-                <option value="HTML">HTML</option>
-              </select>
+            <!-- Media Options -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">🎨 Media Options</div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="showCaptionAboveMedia">
+                    <input type="checkbox" id="showCaptionAboveMedia" /> Show
+                    Caption Above Media
+                  </label>
+                  <small>Caption will be shown above the photo</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="hasSpoiler">
+                    <input type="checkbox" id="hasSpoiler" /> Has Spoiler
+                  </label>
+                  <small>Cover photo with spoiler animation</small>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="photoDisableNotification">
-                <input type="checkbox" id="photoDisableNotification" /> Disable
-                Notification
-              </label>
+            <!-- Message Options -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                🔧 Message Options
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="photoDisableNotification">
+                    <input type="checkbox" id="photoDisableNotification" />
+                    Disable Notification
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoProtectContent">
+                    <input type="checkbox" id="photoProtectContent" /> Protect
+                    Content
+                  </label>
+                  <small>Protects the photo from forwarding and saving</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoAllowPaidBroadcast">
+                    <input type="checkbox" id="photoAllowPaidBroadcast" /> Allow
+                    Paid Broadcast
+                  </label>
+                  <small
+                    >Allow up to 1000 messages per second (costs Stars)</small
+                  >
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="photoReplyToMessageId">Reply to Message ID:</label>
-              <input
-                type="number"
-                id="photoReplyToMessageId"
-                placeholder="123456"
-              />
+            <!-- Reply Parameters -->
+            <div class="param-section">
+              <div class="param-section-header collapsed">
+                ↩️ Reply Parameters
+              </div>
+              <div class="param-section-content collapsed">
+                <div class="form-group">
+                  <label for="photoReplyToMessageId"
+                    >Reply to Message ID:</label
+                  >
+                  <input
+                    type="number"
+                    id="photoReplyToMessageId"
+                    placeholder="123456"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="photoReplyToChatId">Reply to Chat ID:</label>
+                  <input
+                    type="text"
+                    id="photoReplyToChatId"
+                    placeholder="@username atau chat_id"
+                  />
+                  <small
+                    >Chat ID if replying to message from different chat</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="photoAllowSendingWithoutReply">
+                    <input type="checkbox" id="photoAllowSendingWithoutReply" />
+                    Allow Sending Without Reply
+                  </label>
+                  <small>Send photo even if replied message is not found</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoQuote">Quote Text:</label>
+                  <textarea
+                    id="photoQuote"
+                    placeholder="Part of message to quote..."
+                  ></textarea>
+                  <small
+                    >Quoted part of the message to be replied to (0-1024
+                    characters)</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="photoQuoteParseMode">Quote Parse Mode:</label>
+                  <select id="photoQuoteParseMode">
+                    <option value="">None</option>
+                    <option value="Markdown">Markdown</option>
+                    <option value="MarkdownV2">MarkdownV2</option>
+                    <option value="HTML">HTML</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="photoQuotePosition">Quote Position:</label>
+                  <input
+                    type="number"
+                    id="photoQuotePosition"
+                    placeholder="0"
+                  />
+                  <small
+                    >Position of the quote in the original message in UTF-16
+                    code units</small
+                  >
+                </div>
+              </div>
             </div>
 
             <button type="submit" class="send-button">📤 Send Photo</button>
