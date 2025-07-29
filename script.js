@@ -37,9 +37,47 @@ function displayResponse(data, isError = false) {
   }
 }
 
+function displayPayload(payload, method) {
+  const container = document.getElementById("payloadContainer");
+  const content = document.getElementById("payloadContent");
+
+  if (!container || !content) return;
+
+  const timestamp = new Date().toLocaleTimeString();
+  const info = document.createElement("span");
+  info.className = "info";
+  info.textContent = `[${timestamp}] ${method} Payload:`;
+
+  container.style.display = "block";
+
+  let payloadText;
+  if (payload instanceof FormData) {
+    // Convert FormData to readable object
+    const payloadObj = {};
+    for (let [key, value] of payload.entries()) {
+      if (value instanceof File) {
+        payloadObj[
+          key
+        ] = `[File: ${value.name}, ${value.type}, ${value.size} bytes]`;
+      } else {
+        payloadObj[key] = value;
+      }
+    }
+    payloadText = JSON.stringify(payloadObj, null, 2);
+  } else {
+    payloadText = JSON.stringify(payload, null, 2);
+  }
+
+  content.innerHTML = "";
+  content.appendChild(info);
+  content.appendChild(document.createElement("br"));
+  content.appendChild(document.createTextNode(payloadText));
+}
+
 function showLoading() {
-  const container = document.getElementById("responseContent");
-  container.innerHTML = '<span class="loading">Mengirim request...</span>';
+  const responseContainer = document.getElementById("responseContent");
+  responseContainer.innerHTML =
+    '<span class="loading">Mengirim request...</span>';
 }
 
 async function sendMessage(formData) {
@@ -120,6 +158,9 @@ async function sendMessage(formData) {
   }
 
   try {
+    // Display the payload before sending
+    displayPayload(payload, "sendMessage");
+
     showLoading();
     const response = await fetch(url, {
       method: "POST",
@@ -219,6 +260,9 @@ async function sendPhoto(formData) {
   }
 
   try {
+    // Display the payload before sending
+    displayPayload(payload, "sendPhoto");
+
     showLoading();
     const response = await fetch(url, {
       method: "POST",
