@@ -209,7 +209,9 @@ function buildSendMessagePayload() {
   // Reply markup
   if (document.getElementById("replyMarkup").value) {
     try {
-      payload.reply_markup = JSON.parse(document.getElementById("replyMarkup").value);
+      payload.reply_markup = JSON.parse(
+        document.getElementById("replyMarkup").value
+      );
     } catch (e) {
       // Skip invalid JSON
     }
@@ -322,7 +324,10 @@ function buildSendPhotoPayload() {
   // Reply markup
   if (document.getElementById("photoReplyMarkup").value) {
     try {
-      payload.append("reply_markup", document.getElementById("photoReplyMarkup").value);
+      payload.append(
+        "reply_markup",
+        document.getElementById("photoReplyMarkup").value
+      );
     } catch (e) {
       // Skip invalid JSON
     }
@@ -617,7 +622,10 @@ document
     );
 
     // Reply markup
-    formData.append("reply_markup", document.getElementById("replyMarkup").value);
+    formData.append(
+      "reply_markup",
+      document.getElementById("replyMarkup").value
+    );
 
     await sendMessage(formData);
   });
@@ -685,7 +693,10 @@ document
     );
 
     // Reply markup
-    formData.append("reply_markup", document.getElementById("photoReplyMarkup").value);
+    formData.append(
+      "reply_markup",
+      document.getElementById("photoReplyMarkup").value
+    );
 
     await sendPhoto(formData);
   });
@@ -789,39 +800,53 @@ function setReplyMarkupExample(type) {
 
   switch (type) {
     case "inline":
-      example = JSON.stringify({
-        inline_keyboard: [
-          [
-            { text: "Option 1", callback_data: "option_1" },
-            { text: "Option 2", callback_data: "option_2" }
+      example = JSON.stringify(
+        {
+          inline_keyboard: [
+            [
+              { text: "Option 1", callback_data: "option_1" },
+              { text: "Option 2", callback_data: "option_2" },
+            ],
+            [{ text: "Visit Website", url: "https://example.com" }],
           ],
-          [
-            { text: "Visit Website", url: "https://example.com" }
-          ]
-        ]
-      }, null, 2);
+        },
+        null,
+        2
+      );
       break;
     case "keyboard":
-      example = JSON.stringify({
-        keyboard: [
-          [{ text: "Button 1" }, { text: "Button 2" }],
-          [{ text: "Contact", request_contact: true }],
-          [{ text: "Location", request_location: true }]
-        ],
-        resize_keyboard: true,
-        one_time_keyboard: true
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          keyboard: [
+            [{ text: "Button 1" }, { text: "Button 2" }],
+            [{ text: "Contact", request_contact: true }],
+            [{ text: "Location", request_location: true }],
+          ],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+        null,
+        2
+      );
       break;
     case "remove":
-      example = JSON.stringify({
-        remove_keyboard: true
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          remove_keyboard: true,
+        },
+        null,
+        2
+      );
       break;
     case "force":
-      example = JSON.stringify({
-        force_reply: true,
-        input_field_placeholder: "Type your reply here..."
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          force_reply: true,
+          input_field_placeholder: "Type your reply here...",
+        },
+        null,
+        2
+      );
       break;
   }
 
@@ -839,38 +864,52 @@ function setPhotoReplyMarkupExample(type) {
 
   switch (type) {
     case "inline":
-      example = JSON.stringify({
-        inline_keyboard: [
-          [
-            { text: "Like ❤️", callback_data: "like" },
-            { text: "Share 📤", callback_data: "share" }
+      example = JSON.stringify(
+        {
+          inline_keyboard: [
+            [
+              { text: "Like ❤️", callback_data: "like" },
+              { text: "Share 📤", callback_data: "share" },
+            ],
+            [{ text: "More Photos", callback_data: "more_photos" }],
           ],
-          [
-            { text: "More Photos", callback_data: "more_photos" }
-          ]
-        ]
-      }, null, 2);
+        },
+        null,
+        2
+      );
       break;
     case "keyboard":
-      example = JSON.stringify({
-        keyboard: [
-          [{ text: "📷 More Photos" }, { text: "💬 Comment" }],
-          [{ text: "👍 Like" }, { text: "📤 Share" }]
-        ],
-        resize_keyboard: true,
-        one_time_keyboard: true
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          keyboard: [
+            [{ text: "📷 More Photos" }, { text: "💬 Comment" }],
+            [{ text: "👍 Like" }, { text: "📤 Share" }],
+          ],
+          resize_keyboard: true,
+          one_time_keyboard: true,
+        },
+        null,
+        2
+      );
       break;
     case "remove":
-      example = JSON.stringify({
-        remove_keyboard: true
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          remove_keyboard: true,
+        },
+        null,
+        2
+      );
       break;
     case "force":
-      example = JSON.stringify({
-        force_reply: true,
-        input_field_placeholder: "What do you think about this photo?"
-      }, null, 2);
+      example = JSON.stringify(
+        {
+          force_reply: true,
+          input_field_placeholder: "What do you think about this photo?",
+        },
+        null,
+        2
+      );
       break;
   }
 
